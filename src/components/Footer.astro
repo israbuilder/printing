@@ -1,0 +1,94 @@
+---
+import { business } from "../data/business";
+import { getCollection } from "astro:content";
+const year = new Date().getFullYear();
+const navLinks = [
+  { href: "/services", label: "Services" },
+  { href: "/projects", label: "Portfolio" },
+  { href: "/meet-hugo", label: "About Us" },
+  { href: "/areas-we-serve", label: "Areas We Serve" },
+  { href: "/coupons", label: "Specials & Deals" },
+  { href: "/community-mission", label: "Our Mission" },
+  { href: "/blog", label: "Blog & Tips" },
+  { href: "/contact", label: "Contact Us" },
+];
+const services = (await getCollection("services")).sort((a, b) => a.data.order - b.data.order);
+---
+<footer class="bg-navy-800 text-white">
+  <div class="max-w-7xl mx-auto px-6 py-12 grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+    <div>
+      <img
+        src={business.logo}
+        alt={`${business.name} logo`}
+        width="220"
+        height="60"
+        loading="lazy"
+        class="h-16 w-auto rounded-md p-1 object-contain"
+      />
+      <p class="mt-4 font-display text-lg font-bold text-brass-light italic">
+        "Quality Custom Printing &amp; Sublimation in Houston"
+      </p>
+      <p class="mt-2 text-sm text-white/70">Custom Apparel · Sublimation · Large Banners · Signs</p>
+    </div>
+
+    <div>
+      <h2 class="font-display font-bold text-brass-light uppercase text-sm tracking-wider">Printing Services</h2>
+      <ul class="mt-4 space-y-2 text-sm">
+        {services.map((s) => (
+          <li><a href={`/services/${s.id}`} class="text-white/80 hover:text-brass-light transition-colors">{s.data.h1}</a></li>
+        ))}
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="font-display font-bold text-brass-light uppercase text-sm tracking-wider">Quick Links</h2>
+      <ul class="mt-4 space-y-2 text-sm">
+        <li><a href="/services" class="text-white/80 hover:text-brass-light transition-colors">All Services</a></li>
+        <li><a href="/projects" class="text-white/80 hover:text-brass-light transition-colors">Customer Projects &amp; Gallery</a></li>
+        <li><a href="/areas-we-serve" class="text-white/80 hover:text-brass-light transition-colors">Areas We Serve</a></li>
+        <li><a href="/coupons" class="text-white/80 hover:text-brass-light transition-colors">Exclusive Deals &amp; Coupons</a></li>
+        <li><a href="/blog" class="text-white/80 hover:text-brass-light transition-colors">Printing &amp; Sublimation Blog</a></li>
+        <li><a href="/careers" class="text-white/80 hover:text-brass-light transition-colors">Join Our Team</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="font-display font-bold text-brass-light uppercase text-sm tracking-wider">Get in touch</h2>
+      <a href={business.phoneHref} class="mt-4 block font-display text-2xl font-extrabold hover:text-brass-light transition-colors">
+        {business.phone}
+      </a>
+      <p class="mt-2 text-sm text-brass-light font-semibold">{business.hoursDisplay}</p>
+      <p class="mt-3 text-sm text-white/80">{business.address}</p>
+      <p class="mt-1 text-sm text-white/60">Serving {business.areaServed} &amp; surrounding areas</p>
+      <div class="mt-4 flex gap-3">
+        <a href={business.socials.facebook} aria-label={`${business.name} on Facebook`} class="p-2 rounded-full bg-white/10 hover:bg-water transition-colors" target="_blank" rel="noopener noreferrer">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.78-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 22 12z"/></svg>
+        </a>
+        <a href={business.socials.instagram} aria-label={`${business.name} on Instagram`} class="p-2 rounded-full bg-white/10 hover:bg-water transition-colors" target="_blank" rel="noopener noreferrer">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"/></svg>
+        </a>
+        <a href={business.socials.google} aria-label={`${business.name} on Google`} class="p-2 rounded-full bg-white/10 hover:bg-water transition-colors" target="_blank" rel="noopener noreferrer">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 12v3.6h5.1c-.2 1.3-1.6 3.9-5.1 3.9-3.1 0-5.6-2.6-5.6-5.7s2.5-5.7 5.6-5.7c1.8 0 2.9.8 3.6 1.4l2.5-2.4C16.9 4.9 14.7 4 12 4 6.9 4 2.8 8.1 2.8 13.2S6.9 22.4 12 22.4c5.9 0 9.7-4.1 9.7-9.9 0-.7-.1-1.2-.2-1.7H12z"/></svg>
+        </a>
+        <a href={business.socials.tiktok} aria-label={`${business.name} on TikTok`} class="p-2 rounded-full bg-white/10 hover:bg-water transition-colors" target="_blank" rel="noopener noreferrer">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.94,1.61V15.78a2.83,2.83,0,0,1-2.83,2.83h0a2.83,2.83,0,0,1-2.83-2.83h0a2.84,2.84,0,0,1,2.83-2.84h0V9.17h0A6.61,6.61,0,0,0,3.5,15.78h0a6.61,6.61,0,0,0,6.61,6.61h0a6.61,6.61,0,0,0,6.61-6.61V9.17l.2.1a8.08,8.08,0,0,0,3.58.84h0V6.33l-.11,0a4.84,4.84,0,0,1-3.67-4.7H12.94Z"/></svg>
+        </a>
+        <a href={business.socials.youtube} aria-label={`${business.name} on Youtube`} class="p-2 rounded-full bg-white/10 hover:bg-water transition-colors" target="_blank" rel="noopener noreferrer">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5245 6.00694C20.3025 5.81544 20.0333 5.70603 19.836 5.63863C19.6156 5.56337 19.3637 5.50148 19.0989 5.44892C18.5677 5.34348 17.9037 5.26005 17.1675 5.19491C15.6904 5.06419 13.8392 5 12 5C10.1608 5 8.30956 5.06419 6.83246 5.1949C6.09632 5.26005 5.43231 5.34348 4.9011 5.44891C4.63628 5.50147 4.38443 5.56337 4.16403 5.63863C3.96667 5.70603 3.69746 5.81544 3.47552 6.00694C3.26514 6.18846 3.14612 6.41237 3.07941 6.55976C3.00507 6.724 2.94831 6.90201 2.90314 7.07448C2.81255 7.42043 2.74448 7.83867 2.69272 8.28448C2.58852 9.18195 2.53846 10.299 2.53846 11.409C2.53846 12.5198 2.58859 13.6529 2.69218 14.5835C2.74378 15.047 2.81086 15.4809 2.89786 15.8453C2.97306 16.1603 3.09841 16.5895 3.35221 16.9023C3.58757 17.1925 3.92217 17.324 4.08755 17.3836C4.30223 17.461 4.55045 17.5218 4.80667 17.572C5.32337 17.6733 5.98609 17.7527 6.72664 17.8146C8.2145 17.9389 10.1134 18 12 18C13.8865 18 15.7855 17.9389 17.2733 17.8146C18.0139 17.7527 18.6766 17.6733 19.1933 17.572C19.4495 17.5218 19.6978 17.461 19.9124 17.3836C20.0778 17.324 20.4124 17.1925 20.6478 16.9023C20.9016 16.5895 21.0269 16.1603 21.1021 15.8453C21.1891 15.4809 21.2562 15.047 21.3078 14.5835C21.4114 13.6529 21.4615 12.5198 21.4615 11.409C21.4615 10.299 21.4115 9.18195 21.3073 8.28448C21.2555 7.83868 21.1874 7.42043 21.0969 7.07448C21.0517 6.90201 20.9949 6.72401 20.9206 6.55976C20.8539 6.41236 20.7349 6.18846 20.5245 6.00694Z" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14.5385 11.5L10.0962 14.3578L10.0962 8.64207L14.5385 11.5Z" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="border-t border-white/10">
+    <nav aria-label="Footer" class="max-w-7xl mx-auto px-6 pt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm text-white/70">
+      {navLinks.map((l) => (
+        <a href={l.href} class="hover:text-brass-light transition-colors">{l.label}</a>
+      ))}
+    </nav>
+    <div class="max-w-7xl mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-white/60">
+      <p>© {year} {business.name}. {business.license}.</p>
+      <p>{business.trustedPhrase} · {business.areaServed}</p>
+    </div>
+  </div>
+</footer>

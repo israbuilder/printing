@@ -1,0 +1,121 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ScheduleButton from "../../components/ScheduleButton.astro";
+import { business } from "../../data/business";
+
+export async function getStaticPaths() {
+  const services = await getCollection("services");
+  return services.map((svc) => ({ params: { slug: svc.id }, props: { svc } }));
+}
+
+const { svc } = Astro.props;
+const { Content } = await render(svc);
+
+const others = (await getCollection("services"))
+  .filter((s) => s.id !== svc.id)
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 4);
+
+const serviceSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: svc.data.h1,
+  description: svc.data.description,
+  serviceType: svc.data.h1,
+  areaServed: business.areaServed,
+  provider: {
+    "@type": "LocalBusiness",
+    "@id": `${business.url}/#business`,
+    name: business.name,
+    telephone: business.phone,
+    url: business.url,
+  },
+  url: `${business.url}/services/${svc.id}`,
+};
+
+const faqSchema = svc.data.faq?.length
+  ? {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: svc.data.faq.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    }
+  : null;
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: business.url },
+    { "@type": "ListItem", position: 2, name: "Services", item: `${business.url}/services` },
+    { "@type": "ListItem", position: 3, name: svc.data.h1, item: `${business.url}/services/${svc.id}` },
+  ],
+};
+---
+<BaseLayout
+  title={svc.data.title}
+  description={svc.data.description}
+  path={`/services/${svc.id}`}
+  jsonLd={[serviceSchema, breadcrumbSchema, faqSchema].filter(Boolean)}
+>
+  <!-- Header -->
+  <section class="bg-navy text-white border-b-4 border-brass">
+    <div class="max-w-4xl mx-auto px-6 py-14">
+      <a href="/services" class="font-display font-bold text-brass-light text-sm hover:text-white transition-colors">← All services</a>
+      <h1 class="hp-rise mt-4 font-display font-black text-3xl sm:text-5xl leading-tight">{svc.data.h1}</h1>
+      <p class="mt-4 text-white/85 text-lg max-w-2xl">{svc.data.summary}</p>
+      <div class="mt-7 flex flex-col sm:flex-row gap-3">
+        <ScheduleButton class="px-7 py-3.5 text-lg" label="Request Quote for this Service" />
+        <a href={business.phoneHref} class="hp-lift inline-flex items-center justify-center gap-2 border-2 border-brass text-brass-light hover:bg-brass hover:text-navy px-7 py-3.5 rounded-lg font-display font-bold text-lg transition-colors">
+          Call {business.phone}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <article class="mx-auto max-w-3xl px-6 py-12">
+    <div class="prose"><Content /></div>
+
+    {svc.data.faq?.length && (
+      <div class="mt-12">
+        <h2 class="font-display font-extrabold text-2xl text-navy mb-5">Frequently Asked Questions</h2>
+        <div class="space-y-4">
+          {svc.data.faq.map((f) => (
+            <div class="bg-white border border-navy/10 rounded-xl p-5 shadow-sm">
+              <h3 class="font-display font-bold text-navy">{f.q}</h3>
+              <p class="mt-2 text-navy/70 leading-relaxed">{f.a}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <!-- CTA -->
+    <div class="mt-14 bg-cream border border-navy/10 rounded-2xl p-8 text-center">
+      <h2 class="font-display font-extrabold text-2xl text-navy">Ready to order {svc.data.h1.toLowerCase()} in Houston?</h2>
+      <p class="mt-2 text-navy/70">Request a quote online or call {business.phone}. Fast local delivery across {business.areaServed}.</p>
+      <div class="mt-6 flex justify-center"><ScheduleButton class="px-7 py-3.5" label="Get Free Quote" /></div>
+    </div>
+
+    <!-- Related services -->
+    <div class="mt-14">
+      <h2 class="font-display font-extrabold text-xl text-navy mb-4">Related Custom Print Services</h2>
+      <div class="grid gap-3 sm:grid-cols-2">
+        {others.map((o) => (
+          <a href={`/services/${o.id}`} class="hp-lift block bg-white border border-navy/10 rounded-xl p-4 shadow-sm hover:border-brass/40 hover:shadow-md">
+            <span class="font-display font-bold text-navy">{o.data.h1}</span>
+            <span class="block text-sm text-navy/60 mt-1 line-clamp-2">{o.data.summary}</span>
+          </a>
+        ))}
+      </div>
+      <p class="mt-6 text-navy/70">
+        Check out our <a href="/areas-we-serve" class="font-bold text-water hover:text-navy transition-colors">service areas</a>
+        or read helpful tips on the <a href="/blog" class="font-bold text-water hover:text-navy transition-colors">printing blog</a>.
+      </p>
+    </div>
+  </article>
+</BaseLayout>

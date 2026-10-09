@@ -1,0 +1,41 @@
+<!--
+  Netlify Forms detection stub.
+
+  Astro deploys via the Netlify SSR adapter, so Netlify's build bot can't parse
+  forms rendered inside .astro components. This static file gives Netlify a plain
+  HTML copy of each form to detect. The field names here MUST match the real form
+  in src/components/JobApplicationForm.astro. This page is never shown to users.
+-->
+<html>
+  <head><title>Netlify Forms</title></head>
+  <body>
+    <form name="job-application" method="POST" enctype="multipart/form-data" data-netlify="true" netlify-honeypot="bot-field">
+      <input type="hidden" name="form-name" value="job-application" />
+      <input name="bot-field" />
+      <input name="name" />
+      <input name="phone" />
+      <input name="email" />
+      <input name="position" />
+      <input name="experience" />
+      <textarea name="message"></textarea>
+      <input type="file" name="resume" />
+    </form>
+
+    <form name="coupon-lead" method="POST" data-netlify="true">
+      <input type="hidden" name="form-name" value="coupon-lead" />
+      <input name="name" />
+      <input name="phone" />
+      <input name="lead_source" />
+    </form>
+
+    <form name="request-service" method="POST" data-netlify="true">
+      <input type="hidden" name="form-name" value="request-service" />
+      <input name="name" />
+      <input name="phone" />
+      <input name="email" />
+      <input name="address" />
+      <textarea name="problem"></textarea>
+      <input name="lead_source" />
+    </form>
+  </body>
+</html>

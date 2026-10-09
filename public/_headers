@@ -1,0 +1,16 @@
+# Netlify cache headers. Astro fingerprints /_astro/* filenames, so they can be
+# cached immutably forever; other static assets get a sensible shorter TTL.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/images/*
+  Cache-Control: public, max-age=604800
+
+/favicon.ico
+  Cache-Control: public, max-age=604800
+
+/*.png
+  Cache-Control: public, max-age=604800
+
+/*.jpg
+  Cache-Control: public, max-age=604800

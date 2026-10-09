@@ -1,0 +1,37 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ScheduleButton from "../components/ScheduleButton.astro";
+import { business } from "../data/business";
+
+const links = [
+  { href: "/services", label: "All Print Services" },
+  { href: "/projects", label: "Portfolio Gallery" },
+  { href: "/areas-we-serve", label: "Areas We Serve" },
+  { href: "/coupons", label: "Coupons & Deals" },
+  { href: "/blog", label: "Print & Sublimation Blog" },
+  { href: "/contact", label: "Contact Us" },
+];
+---
+<BaseLayout
+  title={`Page Not Found | ${business.name}`}
+  description={`That page couldn't be found. Explore ${business.name}'s custom printing services, sublimation products, and more — or call us at ${business.phone}.`}
+  path="/404"
+>
+  <section class="px-6 py-24 text-center">
+    <div class="max-w-2xl mx-auto">
+      <p class="font-display font-black text-7xl text-brass">404</p>
+      <h1 class="mt-4 font-display font-black text-3xl sm:text-4xl text-navy">Misaligned Print Margin</h1>
+      <p class="mt-4 text-navy/70 text-lg">
+        We couldn't find the page you're looking for — but we can still help with your custom printing project. Try one of these links,
+        or call us directly at
+        <a href={business.phoneHref} class="font-bold text-water hover:text-navy transition-colors">{business.phone}</a>.
+      </p>
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
+        {links.map((l) => (
+          <a href={l.href} class="hp-lift bg-white border border-navy/10 rounded-lg px-5 py-3 font-display font-bold text-navy shadow-sm hover:border-brass/40 hover:text-water transition-colors">{l.label}</a>
+        ))}
+      </div>
+      <div class="mt-9 flex justify-center"><ScheduleButton class="px-7 py-3.5 text-lg" label="Get Free Quote" /></div>
+    </div>
+  </section>
+</BaseLayout>

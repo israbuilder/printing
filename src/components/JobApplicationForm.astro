@@ -1,0 +1,149 @@
+---
+import { business } from "../data/business";
+
+const positions = [
+  "Graphic Designer / Prepress Specialist",
+  "Sublimation & Heat Press Technician",
+  "Large Format Print Operator",
+  "DTF & Screen Printing Specialist",
+  "Production & Finishing Assistant",
+  "Customer Service & Sales Representative",
+  "Other",
+];
+---
+<form
+  id="job-application-form"
+  name="job-application"
+  method="POST"
+  action="/apply-received"
+  enctype="multipart/form-data"
+  data-netlify="true"
+  netlify-honeypot="bot-field"
+  class="grid gap-4"
+  data-phone={business.phone}
+>
+  <input type="hidden" name="form-name" value="job-application" />
+  <p class="hidden">
+    <label>Don't fill this out if you're human: <input name="bot-field" /></label>
+  </p>
+
+  <div class="grid gap-1">
+    <label for="ja-name" class="font-display font-semibold text-sm text-navy">Full name</label>
+    <input
+      id="ja-name"
+      name="name"
+      required
+      autocomplete="name"
+      placeholder="Your full name"
+      class="border border-navy/20 bg-white px-3 py-2.5 rounded-lg text-navy focus:outline-none focus:ring-2 focus:ring-water focus:border-water transition"
+    />
+  </div>
+
+  <div class="grid gap-4 sm:grid-cols-2">
+    <div class="grid gap-1">
+      <label for="ja-phone" class="font-display font-semibold text-sm text-navy">Phone</label>
+      <input
+        id="ja-phone"
+        name="phone"
+        type="tel"
+        required
+        autocomplete="tel"
+        placeholder="(713) 555-0100"
+        class="border border-navy/20 bg-white px-3 py-2.5 rounded-lg text-navy focus:outline-none focus:ring-2 focus:ring-water focus:border-water transition"
+      />
+    </div>
+
+    <div class="grid gap-1">
+      <label for="ja-email" class="font-display font-semibold text-sm text-navy">
+        Email <span class="text-navy/50 font-normal">(optional)</span>
+      </label>
+      <input
+        id="ja-email"
+        name="email"
+        type="email"
+        autocomplete="email"
+        placeholder="you@example.com"
+        class="border border-navy/20 bg-white px-3 py-2.5 rounded-lg text-navy focus:outline-none focus:ring-2 focus:ring-water focus:border-water transition"
+      />
+    </div>
+  </div>
+
+  <div class="grid gap-1">
+    <label for="ja-position" class="font-display font-semibold text-sm text-navy">Position you're applying for</label>
+    <select
+      id="ja-position"
+      name="position"
+      required
+      class="border border-navy/20 bg-white px-3 py-2.5 rounded-lg text-navy focus:outline-none focus:ring-2 focus:ring-water focus:border-water transition"
+    >
+      <option value="" disabled selected>Select a position…</option>
+      {positions.map((p) => <option value={p}>{p}</option>)}
+    </select>
+  </div>
+
+  <div class="grid gap-1">
+    <label for="ja-experience" class="font-display font-semibold text-sm text-navy">
+      Years of print / design experience <span class="text-navy/50 font-normal">(optional)</span>
+    </label>
+    <input
+      id="ja-experience"
+      name="experience"
+      placeholder="e.g. 3 years in commercial print / sublimation"
+      class="border border-navy/20 bg-white px-3 py-2.5 rounded-lg text-navy focus:outline-none focus:ring-2 focus:ring-water focus:border-water transition"
+    />
+  </div>
+
+  <div class="grid gap-1">
+    <label for="ja-message" class="font-display font-semibold text-sm text-navy">
+      Tell us about your skills &amp; portfolio <span class="text-navy/50 font-normal">(optional)</span>
+    </label>
+    <textarea
+      id="ja-message"
+      name="message"
+      rows="4"
+      placeholder="Software (Photoshop, Illustrator), print equipment experience, portfolio link, availability…"
+      class="border border-navy/20 bg-white px-3 py-2.5 rounded-lg text-navy focus:outline-none focus:ring-2 focus:ring-water focus:border-water transition"
+    ></textarea>
+  </div>
+
+  <div class="grid gap-1">
+    <label for="ja-resume" class="font-display font-semibold text-sm text-navy">
+      Resume / Portfolio <span class="text-navy/50 font-normal">(optional — PDF, DOC, max 5 MB)</span>
+    </label>
+    <input
+      id="ja-resume"
+      name="resume"
+      type="file"
+      accept=".pdf,.doc,.docx,.txt,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain"
+      class="text-navy text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-navy file:px-4 file:py-2.5 file:font-display file:font-semibold file:text-white hover:file:bg-navy-700 file:cursor-pointer border border-navy/20 bg-white rounded-lg py-1.5 px-2"
+    />
+  </div>
+
+  <button
+    type="submit"
+    id="ja-submit"
+    class="hp-lift mt-1 bg-flame hover:bg-[#c43d20] text-white px-5 py-3 rounded-lg font-display font-bold tracking-tight shadow-lg shadow-flame/25 transition-colors disabled:opacity-60 disabled:cursor-not-allowed disabled:shadow-none"
+  >
+    Submit Application
+  </button>
+</form>
+
+<p id="ja-status" role="status" aria-live="polite" class="text-sm"></p>
+
+<script>
+  const form = document.getElementById("job-application-form") as HTMLFormElement | null;
+  const status = document.getElementById("ja-status");
+  const resume = document.getElementById("ja-resume") as HTMLInputElement | null;
+  const MAX_RESUME_BYTES = 5 * 1024 * 1024;
+
+  if (form && status) {
+    form.addEventListener("submit", (e) => {
+      const file = resume?.files?.[0];
+      if (file && file.size > MAX_RESUME_BYTES) {
+        e.preventDefault();
+        status.textContent = "Your file is over 5 MB — please attach a smaller file.";
+        status.className = "text-sm text-red-700 font-medium";
+      }
+    });
+  }
+</script>

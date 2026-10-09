@@ -1,0 +1,60 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ScheduleButton from "../components/ScheduleButton.astro";
+import { business } from "../data/business";
+---
+<BaseLayout
+  title={`About Us | Custom Print & Sublimation Studio | ${business.name}`}
+  description={`Meet Israel Zepeda and the print artisans behind ${business.name}. Serving Houston with top-quality custom apparel, sublimation, banners and business printing.`}
+  path="/meet-hugo"
+>
+  <!-- Banner -->
+  <section class="bg-navy text-white border-b-4 border-brass">
+    <div class="max-w-6xl mx-auto px-6 py-16">
+      <p class="font-display font-bold text-brass-light uppercase tracking-[0.2em] text-sm">Passionate Printmakers</p>
+      <h1 class="hp-rise mt-3 font-display font-black text-4xl sm:text-5xl">About Our Print Studio</h1>
+    </div>
+  </section>
+
+  <section class="px-6 py-16 max-w-6xl mx-auto">
+    <div class="grid gap-12 md:grid-cols-2 md:items-center">
+      <div class="hp-zoom rounded-2xl shadow-xl border-4 border-brass">
+        <img
+          src="/images/placeholder.jpeg"
+          alt={`Team at ${business.name}`}
+          width="600"
+          height="600"
+          loading="eager"
+          class="w-full object-cover aspect-square rounded-xl"
+        />
+      </div>
+      <div>
+        <h2 class="font-display font-black text-3xl text-navy mb-4">Dedicated to Exceptional Print Quality</h2>
+        <p class="text-navy/80 text-lg mb-4">
+          Founded by {business.founder}, {business.name} started with a simple mission: to provide Houston businesses, schools, event organizers, and creators with vibrant, retail-grade custom printing without the corporate runaround or inflated minimums.
+        </p>
+        <p class="text-navy/80 text-lg mb-4">
+          We combine state-of-the-art Direct-to-Film (DTF) technology, dye-sublimation heat pressing, wide-format banner plotters, and precision die-cutting equipment with a meticulous eye for color calibration and material quality.
+        </p>
+        <p class="font-display text-xl font-bold text-brass italic mb-6">
+          "{business.trustedPhrase}"
+        </p>
+        <p class="text-navy/80">
+          Have an upcoming event or corporate project? Request a free quote online or call
+          <a href={business.phoneHref} class="font-bold text-water hover:text-navy transition-colors">{business.phone}</a>.
+        </p>
+        <div class="mt-7"><ScheduleButton class="px-8 py-4 text-lg" label="Start a Project" /></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust band -->
+  <section class="relative isolate overflow-hidden bg-navy-800 text-white">
+    <img src="/images/placeholder.jpeg" alt={`The ${business.name} print studio`} width="1600" height="600" loading="lazy" class="absolute inset-0 -z-10 h-full w-full object-cover opacity-25" />
+    <div class="max-w-4xl mx-auto px-6 py-20 text-center">
+      <h2 class="font-display font-extrabold text-3xl sm:text-4xl">A Houston Team You Can Count On</h2>
+      <p class="mt-4 text-white/85 text-lg">{business.trustedPhrase} · {business.rating.value}★ on Google · Fast Local Delivery</p>
+      <div class="mt-8 flex justify-center"><ScheduleButton class="px-8 py-4 text-lg" label="Get a Free Quote" /></div>
+    </div>
+  </section>
+</BaseLayout>

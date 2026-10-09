@@ -1,0 +1,28 @@
+---
+import { business } from "../data/business";
+
+interface Props {
+  label?: string;
+  class?: string;
+}
+const { label = "Schedule Now", class: className = "" } = Astro.props;
+---
+<a
+  href={business.booking.pageUrl}
+  data-hcp-book
+  class={`hp-lift inline-flex items-center justify-center gap-2 bg-[#fdd916] hover:bg-[#005D9D] hover:text-white text-navy px-6 py-2.5 rounded-lg font-display font-bold tracking-tight shadow-md transition-colors whitespace-nowrap ${className}`}
+>
+  {label}
+</a>
+
+<script>
+  document.querySelectorAll("[data-hcp-book]").forEach((el) => {
+    el.addEventListener("click", (event) => {
+      const widget = (window as any).HCPWidget;
+      if (widget && typeof widget.openModal === "function") {
+        event.preventDefault();
+        widget.openModal();
+      }
+    });
+  });
+</script>

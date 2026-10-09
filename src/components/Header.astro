@@ -1,0 +1,101 @@
+---
+import { business } from "../data/business";
+import ScheduleButton from "./ScheduleButton.astro";
+
+const links = [
+  { href: "/services", label: "SERVICES" },
+  { href: "/community-mission", label: "OUR MISSION" },
+  { href: "/coupons", label: "COUPONS" },
+  { href: "/blog", label: "BLOG" },
+  { href: "/careers", label: "CAREERS" },
+  { href: "/areas-we-serve", label: "AREAS WE SERVE" },
+  { href: "/contact", label: "CONTACT" },
+];
+---
+<header class="sticky top-0 z-50 bg-white text-navy shadow-lg">
+  <div class="max-w-7xl mx-auto flex items-center justify-between gap-4 px-4 py-3">
+    <a href="/" class="flex items-center gap-3 shrink-0" aria-label={`${business.name} home`}>
+      <img src={business.logo} alt={`${business.name} logo`} class="h-16 w-auto rounded-md p-1 object-contain" />
+    </a>
+    <nav class="hidden lg:flex items-center gap-6 text-sm font-semibold whitespace-nowrap" aria-label="Primary">
+      {links.map((l) => (
+        <a
+          href={l.href}
+          class="text-navy/85 hover:text-brass-light transition-colors whitespace-nowrap"
+        >{l.label}</a>
+      ))}
+    </nav>
+    <div class="flex items-center gap-3 shrink-0">
+      <a href={business.phoneHref}
+        class="flex shrink-0 items-center gap-1.5 font-display font-bold text-navy hover:text-brass-light transition-colors whitespace-nowrap">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+        </svg>
+        <span>{business.phone}</span>
+      </a>
+      <div class="hidden lg:block shrink-0">
+        <ScheduleButton class="px-4 py-2 text-sm whitespace-nowrap" label="Schedule Now" />
+      </div>
+      <button
+        type="button"
+        id="mobile-menu-toggle"
+        class="lg:hidden inline-flex items-center justify-center p-2 rounded-md border border-navy/20 hover:bg-navy/5 transition-colors"
+        aria-label="Open navigation menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      </button>
+    </div>
+  </div>
+  <nav
+    id="mobile-menu"
+    class="hidden lg:hidden bg-navy-800 text-white border-b-4 border-brass px-4 py-4"
+    aria-label="Mobile primary"
+    hidden
+  >
+    <ul class="flex flex-col gap-1 max-w-7xl mx-auto">
+      {links.map((l) => (
+        <li>
+          <a
+            href={l.href}
+            class="block py-2.5 px-2 rounded font-semibold text-white/90 hover:bg-white/10 hover:text-brass-light transition-colors"
+          >{l.label}</a>
+        </li>
+      ))}
+      <li class="pt-2 border-t border-white/15 mt-2">
+        <a href={business.phoneHref} class="block py-2.5 px-2 font-display font-bold text-brass-light sm:hidden">
+          {business.phone}
+        </a>
+      </li>
+      <li class="pt-2">
+        <ScheduleButton class="w-full text-center" label="Schedule Now" />
+      </li>
+    </ul>
+  </nav>
+</header>
+<script>
+  const toggle = document.getElementById("mobile-menu-toggle");
+  const menu = document.getElementById("mobile-menu");
+  if (toggle && menu) {
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.setAttribute("aria-label", open ? "Close navigation menu" : "Open navigation menu");
+      menu.hidden = !open;
+      menu.classList.toggle("hidden", !open);
+    };
+    toggle.addEventListener("click", () => {
+      setOpen(toggle.getAttribute("aria-expanded") !== "true");
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && toggle.getAttribute("aria-expanded") === "true") {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+  }
+</script>

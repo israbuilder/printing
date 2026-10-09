@@ -1,0 +1,283 @@
+---
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { business } from "../data/business";
+import { reviews } from "../data/reviews";
+import "../styles/global.css";
+
+const {
+  title,
+  description,
+  path,
+  image = "/images/placeholder.jpeg",
+  ogType = "website",
+  jsonLd = [],
+  includeReviews = false,
+} = Astro.props;
+
+const extraSchemas = (Array.isArray(jsonLd) ? jsonLd : [jsonLd]).filter(Boolean);
+const canonical = (business.url + path).replace(/\/+$/, "") || business.url;
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "@id": `${business.url}/#business`,
+  name: business.name,
+  telephone: business.phone,
+  url: business.url,
+  image: business.url + business.logo,
+  logo: business.url + business.logo,
+  priceRange: business.priceRange,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: business.addressParts.street,
+    addressLocality: business.addressParts.city,
+    addressRegion: business.addressParts.state,
+    postalCode: business.addressParts.zip,
+    addressCountry: "US",
+  },
+  geo: {
+    "@type": "GeoCoordinates",
+    latitude: business.geo.lat,
+    longitude: business.geo.lng,
+  },
+  areaServed: business.areaServedList,
+  openingHours: business.hours,
+  openingHoursSpecification: {
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+    opens: "08:00",
+    closes: "19:00",
+  },
+  hasCredential: {
+    "@type": "EducationalOccupationalCredential",
+    credentialCategory: "business",
+    name: "Professional Commercial Printing & Sublimation",
+    identifier: business.license,
+  },
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "Custom Printing & Sublimation Services",
+    itemListElement: [
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          "@id": `${business.url}/services/custom-t-shirts-and-apparel#service`,
+          name: "Custom T-Shirts & Apparel",
+          serviceType: "DTF & Apparel Printing",
+          category: "Custom Apparel",
+          provider: { "@id": `${business.url}/#business` },
+          areaServed: business.areaServedList,
+          url: `${business.url}/services/custom-t-shirts-and-apparel`,
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          "@id": `${business.url}/services/sublimation-products#service`,
+          name: "Sublimation Products & Gifts",
+          serviceType: "Dye Sublimation Printing",
+          category: "Sublimation",
+          provider: { "@id": `${business.url}/#business` },
+          areaServed: business.areaServedList,
+          url: `${business.url}/services/sublimation-products`,
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          "@id": `${business.url}/services/banners-and-signs#service`,
+          name: "Banners & Signs",
+          serviceType: "Large Format Printing",
+          category: "Signage",
+          provider: { "@id": `${business.url}/#business` },
+          areaServed: business.areaServedList,
+          url: `${business.url}/services/banners-and-signs`,
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          "@id": `${business.url}/services/stickers-and-decals#service`,
+          name: "Custom Stickers & Decals",
+          serviceType: "Die-Cut Vinyl Printing",
+          category: "Stickers & Labels",
+          provider: { "@id": `${business.url}/#business` },
+          areaServed: business.areaServedList,
+          url: `${business.url}/services/stickers-and-decals`,
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          "@id": `${business.url}/services/business-cards-and-stationery#service`,
+          name: "Business Cards & Stationery",
+          serviceType: "Commercial Paper Printing",
+          category: "Marketing Materials",
+          provider: { "@id": `${business.url}/#business` },
+          areaServed: business.areaServedList,
+          url: `${business.url}/services/business-cards-and-stationery`,
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          "@id": `${business.url}/services/vehicle-wraps-and-graphics#service`,
+          name: "Vehicle Wraps & Fleet Graphics",
+          serviceType: "Vehicle Graphic Installation",
+          category: "Vehicle Lettering",
+          provider: { "@id": `${business.url}/#business` },
+          areaServed: business.areaServedList,
+          url: `${business.url}/services/vehicle-wraps-and-graphics`,
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          "@id": `${business.url}/services/promotional-products#service`,
+          name: "Promotional Swag & Branded Merchandise",
+          serviceType: "Corporate Swag Printing",
+          category: "Promotional Items",
+          provider: { "@id": `${business.url}/#business` },
+          areaServed: business.areaServedList,
+          url: `${business.url}/services/promotional-products`,
+        },
+      },
+    ],
+  },
+  sameAs: [business.socials.facebook, business.socials.instagram, business.socials.google],
+  ...(includeReviews
+    ? {
+        aggregateRating: {
+          "@type": "AggregateRating",
+          ratingValue: business.rating.value,
+          reviewCount: business.rating.count,
+          bestRating: "5",
+          worstRating: "1",
+        },
+        review: reviews.map((r) => ({
+          "@type": "Review",
+          author: { "@type": "Person", name: r.name },
+          datePublished: r.date,
+          reviewRating: {
+            "@type": "Rating",
+            ratingValue: r.rating,
+            bestRating: 5,
+            worstRating: 1,
+          },
+          reviewBody: r.body,
+        })),
+      }
+    : {}),
+};
+---
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Hanken+Grotesk:wght@400;500;600;700&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Hanken+Grotesk:wght@400;500;600;700&display=swap"
+      />
+    </noscript>
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={business.url + image} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={business.name} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={business.url + image} />
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    {extraSchemas.map((s) => (
+      <script type="application/ld+json" set:html={JSON.stringify(s)} />
+    ))}
+    <script is:inline>
+      (function () {
+        try {
+          var p = new URLSearchParams(location.search);
+          var click =
+            p.get("oppref") ||
+            p.get("gclid") ||
+            p.get("msclkid") ||
+            p.get("fbclid");
+          var hasUtm =
+            p.get("utm_source") || p.get("utm_medium") || p.get("utm_campaign");
+          var data = null;
+          if (hasUtm || click) {
+            data = {
+              src:
+                p.get("utm_source") ||
+                (p.get("oppref")
+                  ? "openai"
+                  : p.get("gclid")
+                    ? "google"
+                    : p.get("msclkid")
+                      ? "bing"
+                      : "facebook"),
+              med: p.get("utm_medium") || "cpc",
+              camp: p.get("utm_campaign") || "",
+              cont: p.get("utm_content") || "",
+              lp: location.pathname,
+              d: new Date().toISOString().slice(0, 10),
+            };
+          } else if (
+            document.referrer &&
+            document.cookie.indexOf("hp_attrib=") === -1
+          ) {
+            var ref = new URL(document.referrer);
+            if (ref.hostname && ref.hostname !== location.hostname) {
+              data = {
+                src: ref.hostname.replace(/^www\./, ""),
+                med: "referral",
+                camp: "",
+                cont: "",
+                lp: location.pathname,
+                d: new Date().toISOString().slice(0, 10),
+              };
+            }
+          }
+          if (data) {
+            document.cookie =
+              "hp_attrib=" +
+              encodeURIComponent(JSON.stringify(data)) +
+              "; path=/; max-age=7776000; SameSite=Lax";
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:left-4 focus:top-4 focus:rounded-lg focus:bg-navy focus:px-4 focus:py-2 focus:text-white focus:shadow-lg"
+      >Skip to main content</a
+    >
+    <Header />
+    <main id="main" class="flex-1"><slot /></main>
+    <Footer />
+  </body>
+</html>

@@ -1,0 +1,39 @@
+---
+import { business } from "../data/business";
+import { reviews } from "../data/reviews";
+
+const featured = reviews.slice(0, 4);
+---
+<section class="bg-white px-6 py-16 border-y-4 border-brass">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center">
+      <p class="font-display font-bold text-brass-dark uppercase tracking-[0.2em] text-sm">Customer Satisfaction</p>
+      <h2 class="mt-2 font-display font-black text-3xl sm:text-4xl text-navy">Recent Work &amp; Verified Reviews</h2>
+      <div class="mt-4 flex items-center justify-center gap-2">
+        <span class="flex items-center gap-0.5 text-brass" aria-hidden="true">
+          {Array.from({ length: 5 }).map(() => (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27l5.18 3.12-1.37-5.9 4.55-3.95-6-.52L12 4.5 9.64 10.02l-6 .52 4.55 3.95-1.37 5.9z"/></svg>
+          ))}
+        </span>
+        <span class="font-display font-bold text-navy">{business.rating.value}</span>
+        <span class="text-navy/70">from {business.rating.count}+ Google reviews</span>
+      </div>
+    </div>
+
+    <!-- Static Google reviews -->
+    <ul class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {featured.map((r) => (
+        <li class="flex flex-col rounded-2xl border border-navy/10 bg-cream/40 p-6 shadow-sm">
+          <span class="flex items-center gap-0.5 text-brass" aria-label={`${r.rating} out of 5 stars`}>
+            {Array.from({ length: r.rating }).map(() => (
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 17.27l5.18 3.12-1.37-5.9 4.55-3.95-6-.52L12 4.5 9.64 10.02l-6 .52 4.55 3.95-1.37 5.9z"/></svg>
+            ))}
+          </span>
+          <p class="mt-3 flex-1 text-navy/80 text-[0.95rem] leading-relaxed">{r.body}</p>
+          <p class="mt-4 font-display font-bold text-navy">{r.name}</p>
+          {r.location && <p class="text-navy/50 text-sm">{r.location}</p>}
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>

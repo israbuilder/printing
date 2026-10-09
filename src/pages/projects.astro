@@ -1,0 +1,55 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ScheduleButton from "../components/ScheduleButton.astro";
+import { business } from "../data/business";
+
+const projects = [
+  { src: "/images/placeholder.jpeg", alt: "Custom DTF printed team hoodies and tees", feature: true, title: "Custom Team Hoodies & Shirts" },
+  { src: "/images/placeholder.jpeg", alt: "Full-color sublimated stainless steel tumblers", title: "Sublimated Skinny Tumblers" },
+  { src: "/images/placeholder.jpeg", alt: "Outdoor commercial vinyl banner for grand opening", title: "Grand Opening Vinyl Banner" },
+  { src: "/images/placeholder.jpeg", alt: "Die-cut holographic vinyl stickers", title: "Holographic Die-Cut Stickers" },
+  { src: "/images/placeholder.jpeg", alt: "Commercial fleet truck door decals", title: "Commercial Vehicle Graphics" },
+];
+---
+<BaseLayout
+  title={`Our Portfolio & Client Projects | ${business.name}`}
+  description={`Browse our gallery of custom t-shirts, sublimated tumblers, outdoor vinyl banners, stickers, and commercial printing projects delivered in Houston, TX.`}
+  path="/projects"
+>
+  <!-- Banner -->
+  <section class="bg-navy text-white border-b-4 border-brass">
+    <div class="max-w-6xl mx-auto px-6 py-16">
+      <p class="font-display font-bold text-brass-light uppercase tracking-[0.2em] text-sm">Portfolio &amp; Showcase</p>
+      <h1 class="hp-rise mt-3 font-display font-black text-4xl sm:text-5xl">Recent Custom Print Projects</h1>
+      <p class="mt-4 text-white/80 text-lg max-w-2xl">
+        Take a look at some of the custom apparel, vibrant sublimation drinkware, large-format signs, and promotional products we've proudly created for Houston businesses, schools, and creators.
+      </p>
+    </div>
+  </section>
+
+  <section class="px-6 py-16 max-w-6xl mx-auto">
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {projects.map((p) => (
+        <div class={`hp-zoom hp-lift group rounded-2xl shadow-md border border-navy/10 overflow-hidden bg-white ${p.feature ? "sm:col-span-2 lg:col-span-2" : ""}`}>
+          <img
+            src={p.src}
+            alt={p.alt}
+            width="800"
+            height="600"
+            loading="lazy"
+            class={`w-full object-cover transition-transform duration-500 group-hover:scale-105 ${p.feature ? "h-72 sm:h-96" : "h-64"}`}
+          />
+          <div class="p-4 bg-white border-t border-navy/5">
+            <h3 class="font-display font-bold text-base text-navy">{p.title}</h3>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="mt-14 text-center bg-cream border border-navy/10 rounded-2xl p-10">
+      <h2 class="font-display font-extrabold text-2xl sm:text-3xl text-navy">Got a Custom Print Idea in Mind?</h2>
+      <p class="mt-3 text-navy/70 max-w-lg mx-auto">Send us your artwork or describe your concept. We'll provide a digital mockup and accurate quote.</p>
+      <div class="mt-6 flex justify-center"><ScheduleButton class="px-8 py-4 text-lg" label="Start Your Custom Order" /></div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,115 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ScheduleButton from "../components/ScheduleButton.astro";
+import { business } from "../data/business";
+import { areas } from "../data/areas";
+
+const excludedZips = [
+  "77013", "77016", "77026", "77033", "77048", "77051", "77060", "77072", "77093",
+];
+
+const allHoustonZips = [
+  "77002", "77003", "77004", "77005", "77006", "77007", "77008", "77009", "77010",
+  "77011", "77012", "77013", "77014", "77015", "77016", "77017", "77018", "77019",
+  "77020", "77021", "77022", "77023", "77024", "77025", "77026", "77027", "77028",
+  "77029", "77030", "77031", "77032", "77033", "77034", "77035", "77036", "77037",
+  "77038", "77039", "77040", "77041", "77042", "77043", "77044", "77045", "77046",
+  "77047", "77048", "77049", "77050", "77051", "77053", "77054", "77055", "77056",
+  "77057", "77058", "77059", "77060", "77061", "77062", "77063", "77064", "77065",
+  "77066", "77067", "77068", "77069", "77070", "77071", "77072", "77073", "77074",
+  "77075", "77076", "77077", "77078", "77079", "77080", "77081", "77082", "77083",
+  "77084", "77085", "77086", "77087", "77088", "77089", "77090", "77091", "77092",
+  "77093", "77094", "77095", "77096", "77098", "77099",
+];
+
+const zips = allHoustonZips.filter((z) => !excludedZips.includes(z));
+
+const surrounding = [
+  { city: "Humble", zips: ["77338", "77346", "77396"] },
+  { city: "Kingwood", zips: ["77339", "77345"] },
+  { city: "Spring", zips: ["77373", "77379", "77386", "77388", "77389"] },
+  { city: "The Woodlands", zips: ["77380", "77381", "77382", "77384", "77385"] },
+  { city: "Cypress", zips: ["77429", "77433"] },
+  { city: "Katy", zips: ["77449", "77450", "77493", "77494"] },
+  { city: "Sugar Land", zips: ["77478", "77479", "77498"] },
+  { city: "Pearland", zips: ["77581", "77584"] },
+  { city: "Pasadena", zips: ["77502", "77503", "77504", "77505", "77506"] },
+];
+---
+<BaseLayout
+  title={`Areas We Serve | Custom Printing & Sublimation | ${business.name}`}
+  description={`${business.name} delivers custom t-shirts, sublimation, banners, stickers and commercial printing across Houston, TX, Katy, Cypress, Spring, The Woodlands, Sugar Land, Pearland, and beyond.`}
+  path="/areas-we-serve"
+>
+  <!-- Banner -->
+  <section class="relative isolate overflow-hidden bg-navy text-white border-b-4 border-brass">
+    <div class="max-w-6xl mx-auto px-6 py-16">
+      <p class="font-display font-bold text-brass-light uppercase tracking-[0.2em] text-sm">Houston Metro Coverage</p>
+      <h1 class="hp-rise mt-3 font-display font-black text-4xl sm:text-5xl">Areas We Serve</h1>
+    </div>
+  </section>
+
+  <section class="px-6 py-16 max-w-5xl mx-auto">
+    <p class="text-navy/80 text-lg mb-3">
+      {business.name} proudly provides custom printing and sublimation solutions across {business.areaServed} and surrounding communities — including Katy, Cypress, The Heights, Spring Branch, Bellaire, Sugar Land, The Woodlands, Kingwood, Pearland, Spring, Humble, and Pasadena.
+    </p>
+    <p class="text-navy/80 text-lg mb-10">
+      Whether you need rush apparel for a local event, corporate gifts for your sales team, outdoor vinyl banners, or trade show signs, our team offers fast turnaround and reliable local delivery.
+    </p>
+
+    <!-- Neighborhood / City Pages -->
+    <h2 class="font-display font-extrabold text-2xl text-navy mb-2">Neighborhoods &amp; Cities We Serve</h2>
+    <p class="text-navy/70 mb-6">Explore dedicated custom printing pages for our primary Houston service areas:</p>
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-12">
+      {areas.map((a) => (
+        <a href={`/areas/${a.slug}`} class="hp-lift group flex items-center justify-between gap-3 bg-white border border-navy/10 rounded-xl px-5 py-4 shadow-sm hover:border-brass/40 hover:shadow-md">
+          <span class="flex items-center gap-2.5">
+            <span class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-navy text-brass-light">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </span>
+            <span class="font-display font-bold text-navy group-hover:text-water transition-colors">Printing in {a.name}</span>
+          </span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-brass shrink-0"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      ))}
+    </div>
+
+    <h2 class="font-display font-extrabold text-2xl text-navy mb-2">Houston ZIP Codes We Cover</h2>
+    <p class="text-navy/60 mb-6">We provide fast local delivery across nearly every Houston ZIP code. If you don't see yours below, give us a call!</p>
+    <ul class="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
+      {zips.map((z) => (
+        <li class="hp-lift flex items-center gap-2.5 bg-white border border-navy/10 rounded-lg px-4 py-3 shadow-sm hover:border-brass/40 hover:shadow-md">
+          <span class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-navy text-brass-light">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </span>
+          <span class="font-display font-bold text-navy">{z}</span>
+        </li>
+      ))}
+    </ul>
+
+    <h2 class="mt-12 font-display font-extrabold text-2xl text-navy mb-6">Surrounding Communities We Serve</h2>
+    <div class="grid gap-4 sm:grid-cols-2">
+      {surrounding.map((c) => (
+        <div class="bg-white border border-navy/10 rounded-xl p-5 shadow-sm">
+          <h3 class="flex items-center gap-2 font-display font-bold text-navy mb-3">
+            <span class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-navy text-brass-light">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </span>
+            {c.city}
+          </h3>
+          <div class="flex flex-wrap gap-2">
+            {c.zips.map((z) => (
+              <span class="inline-block bg-cream border border-navy/10 rounded-md px-3 py-1.5 font-display font-bold text-navy text-sm">{z}</span>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <p class="mt-10 text-navy/80 text-lg">
+      Need prints delivered to your location? Give us a call at
+      <a href={business.phoneHref} class="font-bold text-water hover:text-navy transition-colors">{business.phone}</a>.
+    </p>
+    <div class="mt-8"><ScheduleButton class="px-8 py-4 text-lg" label="Get Free Print Quote" /></div>
+  </section>
+</BaseLayout>

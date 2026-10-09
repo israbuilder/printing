@@ -1,0 +1,167 @@
+---
+import { business } from "../data/business";
+---
+<form
+  id="request-service-form"
+  method="POST"
+  action="/api/request-service"
+  class="grid gap-4"
+  data-phone={business.phone}
+>
+  <div class="grid gap-1">
+    <label for="rs-name" class="font-display font-semibold text-sm text-navy">Full Name</label>
+    <input
+      id="rs-name"
+      name="name"
+      required
+      autocomplete="name"
+      placeholder="Your name or business name"
+      class="border border-navy/20 bg-white px-3 py-2.5 rounded-lg text-navy focus:outline-none focus:ring-2 focus:ring-water focus:border-water transition"
+    />
+  </div>
+
+  <div class="grid gap-1">
+    <label for="rs-phone" class="font-display font-semibold text-sm text-navy">Phone Number</label>
+    <input
+      id="rs-phone"
+      name="phone"
+      type="tel"
+      required
+      autocomplete="tel"
+      placeholder="(713) 555-0100"
+      class="border border-navy/20 bg-white px-3 py-2.5 rounded-lg text-navy focus:outline-none focus:ring-2 focus:ring-water focus:border-water transition"
+    />
+  </div>
+
+  <div class="grid gap-1">
+    <label for="rs-email" class="font-display font-semibold text-sm text-navy">
+      Email Address <span class="text-navy/50 font-normal">(for quote & proofs)</span>
+    </label>
+    <input
+      id="rs-email"
+      name="email"
+      type="email"
+      autocomplete="email"
+      placeholder="you@example.com"
+      class="border border-navy/20 bg-white px-3 py-2.5 rounded-lg text-navy focus:outline-none focus:ring-2 focus:ring-water focus:border-water transition"
+    />
+  </div>
+
+  <div class="grid gap-1">
+    <label for="rs-address" class="font-display font-semibold text-sm text-navy">
+      Delivery Address / City <span class="text-navy/50 font-normal">(optional)</span>
+    </label>
+    <input
+      id="rs-address"
+      name="address"
+      autocomplete="street-address"
+      placeholder="e.g. Houston, Katy, Cypress, Pearland..."
+      class="border border-navy/20 bg-white px-3 py-2.5 rounded-lg text-navy focus:outline-none focus:ring-2 focus:ring-water focus:border-water transition"
+    />
+  </div>
+
+  <div class="grid gap-1">
+    <label for="rs-problem" class="font-display font-semibold text-sm text-navy">Project Details &amp; Quantities</label>
+    <textarea
+      id="rs-problem"
+      name="problem"
+      required
+      rows="4"
+      placeholder="Tell us what you need printed (e.g. 50 custom shirts, 24 sublimated tumblers, 4x8 vinyl banner, business cards, desired deadline)..."
+      class="border border-navy/20 bg-white px-3 py-2.5 rounded-lg text-navy focus:outline-none focus:ring-2 focus:ring-water focus:border-water transition"
+    ></textarea>
+  </div>
+
+  <button
+    type="submit"
+    id="rs-submit"
+    class="hp-lift mt-1 bg-flame hover:bg-[#c43d20] text-white px-5 py-3 rounded-lg font-display font-bold tracking-tight shadow-lg shadow-flame/25 transition-colors disabled:opacity-60 disabled:cursor-not-allowed disabled:shadow-none"
+  >
+    Request Free Quote
+  </button>
+</form>
+
+<p id="rs-status" role="status" aria-live="polite" class="text-sm"></p>
+
+<script>
+  const form = document.getElementById("request-service-form") as HTMLFormElement | null;
+  const status = document.getElementById("rs-status");
+  const submit = document.getElementById("rs-submit") as HTMLButtonElement | null;
+  const phone = form?.dataset.phone ?? "us";
+
+  const leadSource = (): string => {
+    try {
+      const m = document.cookie.match(/(?:^|; )hp_attrib=([^;]+)/);
+      if (!m) return "direct / none";
+      const a = JSON.parse(decodeURIComponent(m[1]));
+      const parts = [a.src || "?", a.med || "?"];
+      if (a.camp) parts.push(a.camp);
+      if (a.cont) parts.push(a.cont);
+      let s = parts.join(" / ");
+      if (a.lp) s += ` — landed ${a.lp}`;
+      if (a.d) s += ` on ${a.d}`;
+      return s;
+    } catch {
+      return "unknown";
+    }
+  };
+
+  if (form && status && submit) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      submit.disabled = true;
+      status.textContent = "Submitting your quote request…";
+      status.className = "text-sm text-gray-600";
+      const source = leadSource();
+
+      try {
+        const netlifyBody = new URLSearchParams();
+        netlifyBody.append("form-name", "request-service");
+        for (const [k, v] of new FormData(form).entries()) {
+          netlifyBody.append(k, typeof v === "string" ? v : "");
+        }
+        netlifyBody.append("lead_source", source);
+        fetch("/", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: netlifyBody.toString(),
+        }).catch(() => {});
+      } catch {}
+
+      try {
+        const apiBody = new FormData(form);
+        apiBody.append("lead_source", source);
+        const res = await fetch(form.action, {
+          method: "POST",
+          body: apiBody,
+        });
+        if (res.ok) {
+          form.reset();
+          form.hidden = true;
+          status.textContent =
+            "Thanks! We received your quote request and will follow up with pricing & proofs shortly.";
+          status.className = "text-sm text-green-700 font-medium";
+
+          const oaiq = (window as any).oaiq;
+          if (typeof oaiq === "function") {
+            oaiq("measure", "lead_created", { type: "customer_action", amount: 0, currency: "USD" });
+          }
+          const gtag = (window as any).gtag;
+          if (typeof gtag === "function") {
+            gtag("event", "generate_lead");
+          }
+          const fbq = (window as any).fbq;
+          if (typeof fbq === "function") {
+            fbq("track", "Lead");
+          }
+        } else {
+          throw new Error(`HTTP ${res.status}`);
+        }
+      } catch {
+        submit.disabled = false;
+        status.textContent = `Something went wrong — please call us directly at ${phone}.`;
+        status.className = "text-sm text-red-700 font-medium";
+      }
+    });
+  }
+</script>

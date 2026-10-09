@@ -1,0 +1,6 @@
+# Netlify Redirects for Albran Printing
+# Main aliases
+/home              /                301
+/our-blog          /blog            301
+/request-service   /contact         301
+/recent-projects   /projects        301

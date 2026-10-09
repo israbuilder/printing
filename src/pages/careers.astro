@@ -1,0 +1,78 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import JobApplicationForm from "../components/JobApplicationForm.astro";
+import { business } from "../data/business";
+
+const perks = [
+  {
+    title: "Creative, modern environment",
+    body: "Work with top-of-the-line Direct-to-Film (DTF) printers, heat presses, sublimation gear, and large-format plotters in Houston.",
+  },
+  {
+    title: "Competitive, reliable pay",
+    body: "Fair hourly pay and production bonuses that reward attention to detail, efficiency, and craft mastery.",
+  },
+  {
+    title: "Skill development & growth",
+    body: "Learn professional prepress, color calibration, apparel decorating, and client project management from experienced printmakers.",
+  },
+  {
+    title: "A supportive local team",
+    body: "Join a close-knit, passionate team dedicated to delivering outstanding custom work to our Houston community.",
+  },
+];
+---
+<BaseLayout
+  title={`Careers — Join the ${business.name} Team | Houston, TX`}
+  description={`Now hiring graphic designers, print operators, and sublimation technicians in Houston, TX. Apply to join ${business.name} — competitive pay and creative growth.`}
+  path="/careers"
+>
+  <!-- Banner -->
+  <section class="bg-navy text-white border-b-4 border-brass">
+    <div class="max-w-6xl mx-auto px-6 py-16">
+      <p class="font-display font-bold text-brass-light uppercase tracking-[0.2em] text-sm">Now Hiring in Houston</p>
+      <h1 class="hp-rise mt-3 font-display font-black text-4xl sm:text-5xl">Join the {business.name} Team</h1>
+      <p class="mt-3 text-white/80 text-lg max-w-2xl">
+        We're always looking for detail-oriented graphic designers, skilled heat press operators, and enthusiastic print specialists.
+      </p>
+    </div>
+  </section>
+
+  <!-- Why work here -->
+  <section class="max-w-6xl mx-auto px-6 py-16">
+    <h2 class="font-display font-black text-3xl text-navy">Why build your career at {business.name}?</h2>
+    <div class="mt-8 grid gap-6 sm:grid-cols-2">
+      {perks.map((perk) => (
+        <div class="bg-cream rounded-2xl border border-navy/10 shadow-sm p-7">
+          <h3 class="font-display font-bold text-xl text-navy">{perk.title}</h3>
+          <p class="mt-2 text-navy/70 leading-relaxed">{perk.body}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Application -->
+  <section class="bg-cream border-y border-navy/10">
+    <div class="max-w-6xl mx-auto px-6 py-16">
+      <div class="grid gap-12 md:grid-cols-2 md:items-start">
+        <div>
+          <h2 class="font-display font-black text-3xl text-navy">Apply now</h2>
+          <p class="mt-3 text-navy/70 text-lg leading-relaxed">
+            Fill out the application form and attach your resume or portfolio. We review every submission and contact promising candidates.
+          </p>
+          <div class="mt-8 bg-navy text-white rounded-2xl p-7 shadow-md">
+            <h3 class="font-display font-bold text-xl text-brass-light">Have Questions? Call Us</h3>
+            <a href={business.phoneHref} class="mt-3 block font-display font-black text-3xl hover:text-brass-light transition-colors">{business.phone}</a>
+            <p class="mt-2 text-sm text-brass-light font-semibold">{business.hoursDisplay}</p>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-navy/10 shadow-sm p-7 sm:p-8">
+          <h3 class="font-display font-bold text-2xl text-navy mb-1">Job application</h3>
+          <p class="mb-6 text-navy/70">Tell us about your print &amp; design experience.</p>
+          <JobApplicationForm />
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

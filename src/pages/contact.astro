@@ -1,0 +1,54 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ScheduleButton from "../components/ScheduleButton.astro";
+import RequestServiceForm from "../components/RequestServiceForm.astro";
+import { business } from "../data/business";
+---
+<BaseLayout
+  title={`Contact ${business.name} — Houston, TX Custom Print Studio`}
+  description={`Contact ${business.name} in Houston, TX. Request a free custom printing or sublimation quote online, call us at ${business.phone}, or visit our studio.`}
+  path="/contact"
+>
+  <!-- Banner -->
+  <section class="bg-navy text-white border-b-4 border-brass">
+    <div class="max-w-6xl mx-auto px-6 py-16">
+      <p class="font-display font-bold text-brass-light uppercase tracking-[0.2em] text-sm">We're Ready to Help</p>
+      <h1 class="hp-rise mt-3 font-display font-black text-4xl sm:text-5xl">Contact {business.name}</h1>
+      <p class="mt-3 text-white/80 text-lg max-w-2xl">
+        Have a print question or ready to start a project? Request a free quote, give us a call, or send us your artwork details.
+      </p>
+    </div>
+  </section>
+
+  <section class="max-w-6xl mx-auto px-6 py-16">
+    <div class="grid gap-12 md:grid-cols-2">
+      <!-- Contact details -->
+      <div class="space-y-8">
+        <div class="bg-white rounded-2xl border border-navy/10 shadow-sm p-7">
+          <h2 class="font-display font-bold text-xl text-navy">Request a Quote Online</h2>
+          <p class="mt-2 text-navy/70">Fill out our quick quote form with your artwork details and quantities.</p>
+          <div class="mt-5"><ScheduleButton class="px-7 py-3.5" label="Quick Quote" /></div>
+        </div>
+
+        <div class="bg-navy text-white rounded-2xl p-7 shadow-md">
+          <h2 class="font-display font-bold text-xl text-brass-light">Call or Text Us</h2>
+          <a href={business.phoneHref} class="mt-3 block font-display font-black text-3xl hover:text-brass-light transition-colors">{business.phone}</a>
+          <p class="mt-2 text-sm text-brass-light font-semibold">{business.hoursDisplay}</p>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-navy/10 shadow-sm p-7">
+          <h2 class="font-display font-bold text-xl text-navy">Houston Studio &amp; Pickup</h2>
+          <p class="mt-2 text-navy/70">{business.address}</p>
+          <p class="mt-1 text-sm text-navy/50">Serving {business.areaServed} &amp; surrounding areas</p>
+        </div>
+      </div>
+
+      <!-- Request service / quote form -->
+      <div class="bg-cream rounded-2xl border border-navy/10 shadow-sm p-7 sm:p-8">
+        <h2 class="font-display font-bold text-2xl text-navy">Get a Free Print Quote</h2>
+        <p class="mt-2 mb-6 text-navy/70">Tell us what you need printed and our team will get back to you with pricing &amp; digital proofs.</p>
+        <RequestServiceForm />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
