@@ -3,7 +3,7 @@ export const prerender = false;
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ScheduleButton from "../../components/ScheduleButton.astro";
 import { business } from "../../data/business";
-import { getPostBySlug, formatPostDate, type Post } from "../../lib/blog-api";
+import { getPostBySlug, formatPostDate, normalizeHtmlContent, type Post } from "../../lib/blog-api";
 
 interface Props {
   post?: Post;
@@ -153,7 +153,7 @@ const jsonLd = [articleSchema, breadcrumbSchema];
       </p>
     )}
     {post.content ? (
-      <div class="prose max-w-none text-navy/90" set:html={post.content} />
+      <div class="prose max-w-none text-navy/90" set:html={normalizeHtmlContent(post.content)} />
     ) : (
       <p class="text-navy/70 italic">No hay contenido disponible para este post.</p>
     )}

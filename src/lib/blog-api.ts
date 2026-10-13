@@ -152,3 +152,17 @@ export function formatPostDate(dateStr?: string | null): string {
     return "";
   }
 }
+
+export function normalizeHtmlContent(content?: string | null): string {
+  if (!content) return "";
+  let cleaned = content.trim();
+  if (/&lt;\s*\/?\s*(p|h[1-6]|ul|ol|li|strong|em|b|i|a|br|hr|div|blockquote|span|img|table|tr|td|th)\b/i.test(cleaned)) {
+    cleaned = cleaned
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&quot;/g, '"')
+      .replace(/&#039;/g, "'")
+      .replace(/&amp;/g, "&");
+  }
+  return cleaned;
+}
