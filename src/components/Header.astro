@@ -13,11 +13,11 @@ const links = [
 ];
 ---
 <header class="sticky top-0 z-50 bg-white text-navy shadow-lg">
-  <div class="max-w-7xl mx-auto flex items-center justify-between gap-4 px-4 py-3">
-    <a href="/" class="flex items-center gap-3 shrink-0" aria-label={`${business.name} home`}>
-      <img src={business.logo} alt={`${business.name} logo`} class="h-16 w-auto rounded-md p-1 object-contain" />
+  <div class="max-w-7xl mx-auto flex items-center justify-between gap-3 lg:gap-4 px-4 py-1.5">
+    <a href="/" class="flex items-center shrink-0" aria-label={`${business.name} home`}>
+      <img src={business.logo} alt={`${business.name} logo`} class="h-14 sm:h-16 w-auto object-contain" />
     </a>
-    <nav class="hidden lg:flex items-center gap-6 text-sm font-semibold whitespace-nowrap" aria-label="Primary">
+    <nav class="hidden lg:flex items-center gap-4 xl:gap-6 text-sm font-semibold whitespace-nowrap" aria-label="Primary">
       {links.map((l) => (
         <a
           href={l.href}

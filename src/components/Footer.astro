@@ -17,14 +17,16 @@ const services = (await getCollection("services")).sort((a, b) => a.data.order -
 <footer class="bg-navy-800 text-white">
   <div class="max-w-7xl mx-auto px-6 py-12 grid gap-10 md:grid-cols-2 lg:grid-cols-4">
     <div>
-      <img
-        src={business.logo}
-        alt={`${business.name} logo`}
-        width="220"
-        height="60"
-        loading="lazy"
-        class="h-16 w-auto rounded-md p-1 object-contain"
-      />
+      <div class="inline-block bg-white rounded-xl p-2.5 shadow-md">
+        <img
+          src={business.logo}
+          alt={`${business.name} logo`}
+          width="220"
+          height="60"
+          loading="lazy"
+          class="h-16 w-auto object-contain"
+        />
+      </div>
       <p class="mt-4 font-display text-lg font-bold text-brass-light italic">
         "Quality Custom Printing &amp; Sublimation in Houston"
       </p>

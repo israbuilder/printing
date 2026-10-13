@@ -88,26 +88,141 @@ const serviceLinks = (await getCollection("services")).sort(
   path="/"
   includeReviews={true}
 >
-  <!-- Hero Section -->
-  <section class="relative isolate overflow-hidden bg-navy text-white py-16 sm:py-24 border-b-4 border-brass">
-    <div class="max-w-7xl mx-auto px-6 grid gap-12 lg:grid-cols-12 lg:items-center">
-      <div class="lg:col-span-7">
-        <div class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 font-display text-xs font-bold uppercase tracking-widest text-brass-light backdrop-blur-sm">
-          <span class="h-2 w-2 rounded-full bg-brass animate-pulse"></span>
-          Houston's Custom Print &amp; Sublimation Studio
-        </div>
-        <h1 class="hp-rise mt-5 font-display font-black text-4xl sm:text-6xl leading-[1.1] text-white">
-          Bring Your Ideas to Life With <span class="text-brass-light">Vibrant Custom Prints</span>
+  <!-- Hero Section (Replicated from reference layout) -->
+  <section class="relative isolate overflow-hidden bg-white text-navy">
+    <!-- Mobile hero image banner -->
+    <div class="relative h-[280px] overflow-hidden sm:h-[360px] lg:hidden">
+      <img
+        src="/images/hero.jpg"
+        alt={`${business.name} service vehicle serving Houston, TX`}
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+        width="900"
+        height="700"
+        class="absolute inset-0 h-full w-full object-cover object-left"
+      />
+      <div class="absolute inset-0"></div>
+    </div>
+
+    <!-- Desktop hero image background -->
+    <div class="absolute inset-0 -z-30 hidden lg:block overflow-hidden">
+      <img
+        src="/images/hero.jpg"
+        sizes="100vw"
+        alt={`${business.name} service vehicle serving Houston, TX`}
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+        width="1920"
+        height="1440"
+        class="h-full w-full object-cover object-right translate-x-[12%] xl:translate-x-[15%]"
+      />
+    </div>
+
+    <!-- Call Button floating over the vehicle - Desktop only -->
+    <a
+      href={business.phoneHref}
+      class="hp-lift absolute right-[18%] top-[84%] z-20 hidden items-center justify-center gap-3 rounded-xl border-2 border-white bg-brass px-7 py-4 font-display text-lg font-black text-white shadow-xl transition-all duration-300 hover:scale-105 hover:bg-white hover:text-navy lg:inline-flex"
+    >
+      <svg
+        width="22"
+        height="22"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path
+          d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
+        />
+      </svg>
+      Call {business.phone}
+    </a>
+
+    <!-- Gradient overlays on desktop for text legibility -->
+    <div
+      class="absolute inset-y-0 left-0 -z-20 hidden w-[68%] bg-gradient-to-r from-white from-0% via-white/95 via-55% to-transparent to-100% lg:block"
+    ></div>
+    <div
+      class="absolute inset-0 -z-20 hidden bg-gradient-to-t from-white/40 via-transparent to-transparent lg:block"
+    ></div>
+
+    <div class="relative mx-auto max-w-7xl px-5 pb-14 pt-2 sm:px-6 sm:pb-16 lg:flex lg:min-h-[680px] lg:items-center lg:px-6">
+      <div class="max-w-xl lg:max-w-2xl">
+        <h1
+          class="hp-rise hp-delay-2 mt-3 font-display text-[2.45rem] font-black leading-[1.02] tracking-tight text-navy sm:text-5xl lg:mt-6 lg:max-w-2xl lg:text-6xl"
+        >
+          More Than Printing in Houston.
+          <span class="text-brass block">Building a Better Brand.</span>
         </h1>
-        <p class="mt-5 text-lg sm:text-xl text-white/85 max-w-2xl leading-relaxed">
-          From retail-quality custom apparel and DTF printing to permanent sublimation drinkware, large banners, and commercial graphics — we print with brilliant colors and fast local turnaround.
+
+        <p class="hp-rise hp-delay-3 mt-4 max-w-xl font-display text-lg font-semibold leading-relaxed text-navy/85 sm:text-xl lg:mt-5">
+          At {business.name}, we believe printing is about more than paper and ink. It’s about people, businesses, and creating lasting impressions that inspire.
         </p>
 
-        <div class="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
-          <ScheduleButton class="px-8 py-4 text-lg font-bold" label="Request a Free Quote" />
+        <!-- MISSION HIGHLIGHTS -->
+        <div class="hp-rise hp-delay-4 mt-7 grid grid-cols-3 gap-0 py-5 sm:max-w-xl">
+          <!-- CUSTOM APPAREL -->
+          <div class="px-3 text-center sm:px-5">
+            <div class="mb-2 flex justify-center text-water">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/>
+              </svg>
+            </div>
+            <h3 class="font-display text-sm font-black uppercase leading-tight text-navy sm:text-base">
+              Custom<br />Apparel
+            </h3>
+            <p class="mt-2 text-[11px] font-bold leading-4 text-navy/70 sm:text-xs sm:leading-5">
+              Retail-grade DTF prints with vivid colors that never fade or peel.
+            </p>
+          </div>
+
+          <!-- VIBRANT SUBLIMATION -->
+          <div class="border-x border-navy/10 px-3 text-center sm:px-5">
+            <div class="mb-2 flex justify-center text-brass">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+              </svg>
+            </div>
+            <h3 class="font-display text-sm font-black uppercase leading-tight text-navy sm:text-base">
+              Vibrant<br />Sublimation
+            </h3>
+            <p class="mt-2 text-[11px] font-bold leading-4 text-navy/70 sm:text-xs sm:leading-5">
+              Full-color permanent drinkware, tumblers, and promotional items.
+            </p>
+          </div>
+
+          <!-- LASTING IMPACT -->
+          <div class="px-3 text-center sm:px-5">
+            <div class="mb-2 flex justify-center text-flame">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>
+            </div>
+            <h3 class="font-display text-sm font-black uppercase leading-tight text-navy sm:text-base">
+              Lasting<br />Impact
+            </h3>
+            <p class="mt-2 text-[11px] font-bold leading-4 text-navy/70 sm:text-xs sm:leading-5">
+              Every custom print helps elevate local businesses and communities.
+            </p>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="hp-rise hp-delay-5 mt-7 grid grid-cols-1 gap-3 sm:flex sm:flex-row sm:items-center lg:mt-8">
+          <a
+            href="/community-mission"
+            class="hp-lift inline-flex w-full items-center justify-center gap-3 rounded-lg border-2 border-white bg-navy px-8 py-4 font-display text-lg font-bold text-white shadow-md shadow-navy/15 transition-all duration-300 hover:border-navy hover:bg-white hover:text-navy sm:w-auto"
+          >
+            LEARN ABOUT OUR MISSION
+          </a>
           <a
             href={business.phoneHref}
-            class="hp-lift inline-flex items-center justify-center gap-2 border-2 border-brass-light text-brass-light hover:bg-brass-light hover:text-navy px-7 py-4 rounded-lg font-display font-bold text-lg transition-colors"
+            class="hp-lift inline-flex w-full items-center justify-center gap-3 rounded-lg border-2 border-navy/20 bg-brass px-8 py-4 font-display text-lg font-bold text-white shadow-md transition-colors hover:bg-brass-dark sm:w-auto lg:hidden"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
@@ -115,35 +230,19 @@ const serviceLinks = (await getCollection("services")).sort(
             Call {business.phone}
           </a>
         </div>
-
-        <div class="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-4 border-t border-white/15 pt-8">
-          {stats.map((s) => (
-            <div>
-              <p class="font-display font-black text-2xl sm:text-3xl text-brass-light">{s.title}</p>
-              <p class="text-xs sm:text-sm text-white/75 mt-0.5">{s.label}</p>
-            </div>
-          ))}
-        </div>
       </div>
+    </div>
+  </section>
 
-      <div class="lg:col-span-5">
-        <div class="hp-zoom rounded-3xl overflow-hidden shadow-2xl border-4 border-brass/40 bg-navy-700/50">
-          <img
-            src="/images/placeholder.jpeg"
-            alt={`${business.name} custom apparel and sublimation studio in Houston`}
-            width="600"
-            height="500"
-            loading="eager"
-            class="w-full h-80 sm:h-96 object-cover"
-          />
-          <div class="p-6 bg-navy-800 text-white">
-            <h3 class="font-display font-bold text-xl text-brass-light">No Minimums &amp; Bulk Discounts</h3>
-            <p class="mt-2 text-sm text-white/80">
-              Need 1 personalized custom shirt or 1,000 corporate polo uniforms? We handle single items, rush event batches, and high-volume corporate orders.
-            </p>
-          </div>
+  <!-- Trust / Stats Bar -->
+  <section class="bg-navy text-white py-6 border-b-4 border-brass">
+    <div class="max-w-7xl mx-auto px-6 grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
+      {stats.map((s) => (
+        <div>
+          <p class="font-display font-black text-2xl sm:text-3xl text-brass-light">{s.title}</p>
+          <p class="text-xs sm:text-sm text-white/75 mt-0.5">{s.label}</p>
         </div>
-      </div>
+      ))}
     </div>
   </section>
 
