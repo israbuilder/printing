@@ -18,7 +18,7 @@ export async function sendLeadEmail(
       },
       body: JSON.stringify({
         personalizations: [{ to: [{ email: deps.to }] }],
-        from: { email: "website@houstonitsecurity.net" },
+        from: { email: "website@albranprinting.com" },
         subject: `New Print Quote Request: ${input.name}`,
         content: [
           {

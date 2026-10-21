@@ -5,7 +5,7 @@ export const business = {
   email: "houstonitbrenda@gmail.com",
   phone: "(346) 477-8912",
   phoneHref: "tel:+13464778912",
-  url: "https://houstonitsecurity.net",
+  url: "https://albranprinting.com",
   address: "1927 W. McKinney St., Houston, TX 77019",
   // Structured address for schema.org PostalAddress
   addressParts: {
@@ -43,11 +43,11 @@ export const business = {
   hours: "Mo-Sa 08:00-19:00",
   hoursDisplay: "Mon - Sat: 8:00 AM - 7:00 PM | Rush Orders Available",
   socials: {
-    facebook: "https://houstonitsecurity.net",
-    instagram: "https://houstonitsecurity.net",
+    facebook: "https://albranprinting.com",
+    instagram: "https://albranprinting.com",
     google: "https://www.google.com/maps?q=1927+W+McKinney+St,+Houston,+TX+77019",
-    tiktok: "https://houstonitsecurity.net",
-    youtube: "https://houstonitsecurity.net",
+    tiktok: "https://albranprinting.com",
+    youtube: "https://albranprinting.com",
   },
   rating: { value: "5.0", count: "48" },
   booking: {
