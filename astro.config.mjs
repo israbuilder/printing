@@ -28,7 +28,33 @@ export default defineConfig({
     plugins: [tailwindcss()]
   },
 
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      filter: (page) =>
+        !page.includes('/404') &&
+        !page.includes('/apply-received') &&
+        !page.includes('/api/'),
+      serialize: async (item) => {
+        if (item.url.includes('/services/')) {
+          item.changefreq = 'weekly';
+          item.priority = 0.9;
+        } else if (item.url === 'https://albranprinting.com/' || item.url === 'https://albranprinting.com') {
+          item.changefreq = 'daily';
+          item.priority = 1.0;
+        } else if (item.url.includes('/areas/')) {
+          item.changefreq = 'monthly';
+          item.priority = 0.8;
+        } else if (item.url.includes('/blog')) {
+          item.changefreq = 'weekly';
+          item.priority = 0.8;
+        } else {
+          item.changefreq = 'monthly';
+          item.priority = 0.7;
+        }
+        return item;
+      },
+    }),
+  ],
 
   adapter: node({
     mode: 'standalone'

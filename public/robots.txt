@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
 
+# Disallow private endpoints, forms processing, and internal APIs
+Disallow: /api/
+Disallow: /apply-received/
+
+# Canonical Sitemap
 Sitemap: https://albranprinting.com/sitemap-index.xml
