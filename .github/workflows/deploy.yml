@@ -1,4 +1,4 @@
-name: Deploy Astro SSR Production (Rsync Build)
+name: Deploy Astro SSR Production
 
 on:
   push:
@@ -15,8 +15,8 @@ permissions:
   contents: read
 
 jobs:
-  deploy:
-    name: Build & Deploy via Rsync
+  test:
+    name: Build & Validate
     runs-on: ubuntu-latest
 
     steps:
@@ -32,17 +32,52 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build Astro SSR application
+      - name: Build Astro application for validation
         env:
           PUBLIC_API_URL: ${{ secrets.PUBLIC_API_URL }}
         run: npm run build
 
-      - name: Configure SSH
+  deploy:
+    name: Deploy to VPS
+    needs: test
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+
+    steps:
+      - name: Configure SSH and Validate Inputs
         env:
           VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_PORT: ${{ secrets.VPS_PORT }}
+          SUBDIR: ${{ secrets.VPS_PATH }}
+          APP_NAME: ${{ secrets.PM2_APP_NAME }}
         run: |
+          set -euo pipefail
+
+          # 1. Path traversal and empty variable guardrail
+          if [ -z "${SUBDIR// }" ]; then
+            echo "::error::CRITICAL ERROR: VPS_PATH is not defined or is empty in GitHub Secrets."
+            exit 1
+          fi
+
+          if [[ "$SUBDIR" == /* ]] || [[ "$SUBDIR" == *".."* ]]; then
+            echo "::error::CRITICAL ERROR: VPS_PATH must not start with a leading slash '/' or contain '..': $SUBDIR"
+            exit 1
+          fi
+
+          # 2. PM2 App Name validation guardrail (alphanumeric, dashes and underscores only)
+          if [ -z "${APP_NAME// }" ]; then
+            echo "::error::CRITICAL ERROR: PM2_APP_NAME is not defined or is empty in GitHub Secrets."
+            exit 1
+          fi
+
+          if [[ ! "$APP_NAME" =~ ^[a-zA-Z0-9_-]+$ ]]; then
+            echo "::error::CRITICAL ERROR: PM2_APP_NAME contains invalid characters. Use only letters, numbers, hyphens, and underscores: $APP_NAME"
+            exit 1
+          fi
+
+          # 3. Configure SSH credentials on the GitHub Actions runner
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
           printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/deploy_key
@@ -50,39 +85,59 @@ jobs:
           ssh-keyscan -p "${VPS_PORT:-22}" -H "$VPS_HOST" >> ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
 
-      - name: Upload built files via rsync
+      - name: Execute remote Git deployment
         env:
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_USER: ${{ secrets.VPS_USER }}
           VPS_PORT: ${{ secrets.VPS_PORT }}
-          VPS_PATH: ${{ secrets.VPS_PATH }}
+          SUBDIR: ${{ secrets.VPS_PATH }}
+          APP_NAME: ${{ secrets.PM2_APP_NAME }}
         run: |
-          rsync -az \
-            --delete \
-            --exclude='.env' \
-            --exclude='.git/' \
-            --exclude='.github/' \
-            --exclude='node_modules/' \
-            -e "ssh -i ~/.ssh/deploy_key -p ${VPS_PORT:-22}" \
-            ./ \
-            "$VPS_USER@$VPS_HOST:$VPS_PATH/"
+          set -euo pipefail
+          TARGET_PATH="/var/www/$SUBDIR"
 
-      - name: Restart application on server
-        env:
-          VPS_HOST: ${{ secrets.VPS_HOST }}
-          VPS_USER: ${{ secrets.VPS_USER }}
-          VPS_PORT: ${{ secrets.VPS_PORT }}
-          VPS_PATH: ${{ secrets.VPS_PATH }}
-        run: |
-          ssh \
-            -i ~/.ssh/deploy_key \
-            -p "${VPS_PORT:-22}" \
-            "$VPS_USER@$VPS_HOST" << 'EOF'
-              set -e
+          ssh -i ~/.ssh/deploy_key -p "${VPS_PORT:-22}" "$VPS_USER@$VPS_HOST" "bash -s" << EOF "$TARGET_PATH" "$APP_NAME"
+            set -euo pipefail
 
-              cd "$VPS_PATH"
+            APP_PATH="\$1"
+            PM2_PROCESS="\$2"
 
-              pm2 restart albran-printing --update-env || pm2 start ./dist/server/entry.mjs --name "albran-printing"
-              
-              pm2 save
+            # 1. Precondition checks: directory, git repo, and production environment file
+            if [ ! -d "\$APP_PATH" ]; then
+              echo "ERROR: Target directory \$APP_PATH does not exist on the server."
+              exit 1
+            fi
+
+            cd "\$APP_PATH"
+
+            if [ ! -d ".git" ]; then
+              echo "ERROR: \$APP_PATH is not a valid Git repository."
+              exit 1
+            fi
+
+            if [ ! -f .env ]; then
+              echo "ERROR: Production .env file does not exist in \$APP_PATH."
+              exit 1
+            fi
+
+            # 2. Pull latest code cleanly via Git (preserves untracked files like .env)
+            git fetch origin main
+            git reset --hard origin/main
+
+            # Enforce Node 22 binary path from NVM
+            export PATH=/root/.nvm/versions/node/v22.22.0/bin:\$PATH
+
+            # 3. Clean install and build SSR bundle on the server
+            npm ci --prefer-offline --no-audit
+            npm run build
+
+            # Prune devDependencies to keep memory and disk footprint minimal
+            npm prune --omit=dev
+
+            # 4. Restart or start the Astro SSR process with PM2 using the validated secret
+            pm2 restart "\$PM2_PROCESS" --update-env || pm2 start ./dist/server/entry.mjs --name "\$PM2_PROCESS"
+            pm2 save
+
+            # 5. Verify process status
+            pm2 describe "\$PM2_PROCESS" | grep -E "status|uptime|restarts"
           EOF
